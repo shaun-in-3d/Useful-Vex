@@ -1,0 +1,2 @@
+//offset points along line (normal) NOTE: use a polyframe node with the tangent output set to N (or just use an orient along curve node)
+@P = @P + @N*((rand(@ptnum)-0.5)*.01);

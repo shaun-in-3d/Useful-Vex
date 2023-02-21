@@ -1,0 +1,6 @@
+//set normal up(ish)
+@N = {0,1,0};
+@N.x = `chs("spare_input0")`;
+@N.z = `chs("spare_input0")`;
+
+@N = normalize(@N);

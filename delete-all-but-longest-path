@@ -1,0 +1,34 @@
+//to be used in a primwrangle. Prim Curves NEED UV length attribute, can be created with a measure SOP
+
+// Get the total number of primitives in the object
+int totalPrims = nprimitives(0);
+
+// Initialize the longest UV curve length to a very low value
+float longestCurveLength = -999999;
+
+// Initialize the index of the primitive with the longest UV curve
+int longestCurvePrim = -1;
+
+// Iterate over all the primitives in the object
+for(int i = 0; i < totalPrims; i++)
+{
+    // Get the length of the UV curve for the current primitive
+    float curveLength = primuv(0, "uv", i, 1);
+
+    // If the curve length is longer than the current longest curve length,
+    // update the longest curve length and the index of the primitive with the longest curve
+    if(curveLength > longestCurveLength)
+    {
+        longestCurveLength = curveLength;
+        longestCurvePrim = i;
+    }
+}
+
+// Delete all the primitives except the one with the longest UV curve
+for(int i = totalPrims - 1; i >= 0; i--)
+{
+    if(i != longestCurvePrim)
+    {
+        removeprim(0, i, 1);
+    }
+}

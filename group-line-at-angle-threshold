@@ -1,0 +1,28 @@
+//Group line at angle threshold (you can use a polycut to split the lines after)
+float threshold = 30.0; //sets angle threshhold for break
+int currentPrim = -1;
+int currentPt = -1;
+
+for (int i = 0; i < npoints(0); i++) {
+    int prim = findattribval(0, "point", "prim", i);
+    if (prim != currentPrim) {
+        currentPrim = prim;
+        currentPt = i;
+    } else {
+        vector prevPt = point(0, "P", currentPt);
+        vector currPt = point(0, "P", i);
+        vector nextPt;
+        if (i + 1 == npoints(0)) {
+            nextPt = point(0, "P", primvertex(0, prim, 0));
+        } else {
+            nextPt = point(0, "P", i+1);
+        }
+        vector prevVec = normalize(currPt - prevPt);
+        vector nextVec = normalize(nextPt - currPt);
+        float angle = degrees(acos(dot(prevVec, nextVec)));
+        if (angle > threshold) {
+            setpointgroup(0, "group_break", i, 1);
+            currentPt = i;
+        }
+    }
+}

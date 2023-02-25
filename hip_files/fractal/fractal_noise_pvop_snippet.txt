@@ -1,0 +1,26 @@
+//fractal noise displace
+
+float amplitude = chf("amplitude");
+float frequency = chf("frequency");
+float lacunarity = chf("lacunarity");
+float persistence = chf("persistence");
+int octaves = chi("octaves");
+float scale = ch("scale");
+float offset_scale = ch("offset_scale");
+vector p = @P;
+vector offset = chv("offset");
+
+
+// create a new attribute to store the noise
+vector noise = set(0, 0, 0);
+
+for (int i = 0; i < octaves; i++) {
+    noise += noise((p + offset) * frequency) * amplitude;
+    frequency *= lacunarity;
+    amplitude *= persistence;
+    scale *= 0.1;
+}
+
+// use the noise to modify the position of the points
+//@P += noise-(p*10);
+@P = @P + noise*0.1;

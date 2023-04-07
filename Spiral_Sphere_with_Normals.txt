@@ -1,0 +1,39 @@
+// Declare input parameters
+int numPoints = chi("numPoints");
+int spiralTurns = chi("spiralTurns");
+float radius = chf("radius");
+float topAngle = chf("topAngle");
+float bottomAngle = chf("bottomAngle");
+
+// Calculate the delta angle for each point along the spiral
+float deltaAngle = (2 * M_PI * spiralTurns) / float(numPoints - 1);
+
+// Loop through the points and create the spiral pattern
+for (int i = 0; i < numPoints; ++i)
+{
+    // Calculate the normalized height (from 0 to 1) along the sphere
+    float normalizedHeight = float(i) / float(numPoints - 1);
+
+    // Calculate the polar coordinates for the point
+    float theta = deltaAngle * i;
+    float phi = M_PI * normalizedHeight;
+
+    // Convert the polar coordinates to Cartesian coordinates
+    vector pos;
+    pos.x = radius * sin(phi) * cos(theta);
+    pos.y = radius * sin(phi) * sin(theta);
+    pos.z = radius * cos(phi);
+
+    // Add the point to the geometry
+    int pt = addpoint(geoself(), pos);
+
+    // Calculate the normal for the point
+    float currentAngle = radians(lerp(topAngle, bottomAngle, normalizedHeight));
+    vector normal;
+    normal.x = cos(theta) * cos(currentAngle);
+    normal.y = sin(theta) * cos(currentAngle);
+    normal.z = sin(currentAngle);
+
+    // Set the normal for the point
+    setpointattrib(geoself(), "N", pt, normal, "set");
+}

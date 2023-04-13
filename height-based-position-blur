@@ -1,0 +1,42 @@
+//position (P) blur based on vertical height 
+
+// Define custom parameters for height and blur control
+float min_height = chf("min_height");
+float max_height = chf("max_height");
+float blur_min = chf("blur_min");
+float blur_max = chf("blur_max");
+
+// Open a point cloud handle for searching nearby points
+int pc = pcopen(0, "P", @P, max(chf("max_search_radius"), 0.001), chi("num_points"));
+
+// Initialize the average position and count variables
+vector avg_pos = {0, 0, 0};
+int count = 0;
+
+// Iterate over nearby points in the point cloud
+int pt;
+while (pciterate(pc)) {
+    // Import the point number of the current point in the loop
+    if (pcimport(pc, "point.number", pt)) {
+        // Get the position of the current point
+        vector pos = point(0, "P", pt);
+
+        // Check if the current point is within the specified height range
+        if (pos.y >= min_height && pos.y <= max_height) {
+            // Add the position to the average position sum and increment the count
+            avg_pos += pos;
+            count++;
+        }
+    }
+}
+
+// If any points were within the height range, calculate the average position
+if (count > 0) {
+    avg_pos /= count;
+
+    // Calculate the blur amount based on the current point's height
+    float blur_amount = fit(@P.y, min_height, max_height, blur_min, blur_max);
+    
+    // Interpolate between the original position and the average position based on the blur amount
+    @P = lerp(@P, avg_pos, blur_amount);
+}

@@ -1,0 +1,11 @@
+//Delete object based on its combined bouding box size
+//use in for each connected piece loop to "dlete pieces smaller than"
+//use with a blast node with @delete = 1
+
+
+v@size = getbbox_size(0);
+f@sizecombined = @size[0]+@size[1]+@size[2];
+f@remove;
+if(@sizecombined<chf('remove')){
+@delete=1;
+};

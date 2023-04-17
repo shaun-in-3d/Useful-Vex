@@ -1,0 +1,11 @@
+//deletes a ratio of random connected primatives in an object
+//place after connectivity node with its att set to "class" (default)
+
+int class = prim(0, "class", @primnum);
+float removal_ratio = chf("removal_ratio");
+float seed = chf("seed");
+
+if (rand(class * seed) < removal_ratio) {
+    removeprim(geoself(), @primnum, 1);
+}
+

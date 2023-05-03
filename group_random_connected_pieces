@@ -1,0 +1,22 @@
+//Use in a point wrangle, after a connectivity node to add @class to each piece
+//Exported groups are called GRP_1,GRP_2,GRP_3 etc.
+
+
+// User-set parameter for the number of groups
+int num_groups = chi("num_groups");
+
+// Fancy warning if @class doesnt exist!
+if (!hasattrib(geoself(), "point", "class")) {
+    printf("Class attribute not found. Make sure to create a 'piece' attribute using the Connectivity SOP.\n");
+    return;
+}
+
+// Retrieve the piece ID of the current point
+int class = i@class;
+
+// Calculate the group ID for the current piece
+int group_id = class % num_groups;
+
+// Create and assign the group name based on the calculated group ID
+string group_name = sprintf("GRP_%d", group_id + 1);
+setpointgroup(geoself(), group_name, @ptnum, 1);
